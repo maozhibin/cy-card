@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("card")
 public class ServiceController {
-
     @RequestMapping(value = "service/check" ,method = RequestMethod.GET)
     public Long check(){
         return System.currentTimeMillis();
