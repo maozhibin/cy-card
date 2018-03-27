@@ -100,10 +100,16 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
 
-  <select id="bankLinkList" resultType="cun.yun.card.cycard.dal.dto.LinkInfoDato">
+  <select id="bankLinkList" resultType="cun.yun.card.cycard.dal.dto.BankLinkInfoDato">
       SELECT
+          pa.id cooperativePartnerId,
+          k.id linkId,
           b.`name`,
           b.iamge,
+          b.price,
+          p.type,
+          b.introduce,
+          b.sort,
           k.url,
           (
               SELECT
@@ -114,7 +120,7 @@
                   cooperative_partner_id = l.cooperative_partner_id
               AND link_id = k.id
               AND is_employ = 0
-
+	          AND type=1
       ) count
       FROM
           cooperative_partner_link l
@@ -132,5 +138,50 @@
       AND l.id = #{id}
       AND pa.`code` = #{cooperativePartnerCode}
       AND pa.is_employ = 0
+      ORDER BY b.sort
   </select>
+
+
+    <select id="loanLinkList" resultType="cun.yun.card.cycard.dal.dto.LoanLinkInfoDato">
+        SELECT
+            pa.id cooperativePartnerId,
+            lo.`name`,
+            k.id linkId,
+            k.url,
+            lo.image,
+            lo.price,
+	        p.type,
+            lo.limit_min limitMin,
+            lo.limit_max limitMax,
+            lo.money_rate moneyRate,
+            lo.sort,
+            (
+                SELECT
+                    COUNT(1)
+                FROM
+                    applay_user_info
+                WHERE
+                    cooperative_partner_id = l.cooperative_partner_id
+                AND link_id = k.id
+                AND is_employ = 0
+                AND type=2
+            ) count
+        FROM
+            cooperative_partner_link l
+        LEFT JOIN cooperative_link_product p ON p.cooperative_partner_link_id = l.id
+        AND l.is_employ = 0
+        LEFT JOIN loan_link k ON k.id = p.link_id
+        AND p.is_employ = 0
+        LEFT JOIN loan lo ON lo.id = k.loan_id
+        AND k.is_employ = 0
+        LEFT JOIN cooperative_partner pa ON pa.id = l.cooperative_partner_id
+        AND lo.is_employ = 0
+        WHERE
+            p.type = 2
+        AND l.link_type = #{type}
+        AND l.id = #{id}
+        AND pa.`code` =  #{cooperativePartnerCode}
+        AND pa.is_employ = 0
+        ORDER BY lo.sort
+    </select>
 </mapper>

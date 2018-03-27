@@ -5,6 +5,30 @@ import java.util.Date;
 public class CooperativePartnerLink {
     private Long id;
 
+    private Integer sort;
+
+    @Override
+    public String toString() {
+        return "CooperativePartnerLink{" +
+                "id=" + id +
+                ", sort=" + sort +
+                ", cooperativePartnerId=" + cooperativePartnerId +
+                ", url='" + url + '\'' +
+                ", linkType=" + linkType +
+                ", isEmploy=" + isEmploy +
+                ", updatedTime=" + updatedTime +
+                '}';
+    }
+
+    public void setSort(Integer sort) {
+        this.sort = sort;
+    }
+
+    public Integer getSort() {
+
+        return sort;
+    }
+
     private Long cooperativePartnerId;
 
     private String url;
@@ -63,19 +87,4 @@ public class CooperativePartnerLink {
         this.updatedTime = updatedTime;
     }
 
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getClass().getSimpleName());
-        sb.append(" [");
-        sb.append("Hash = ").append(hashCode());
-        sb.append(", id=").append(id);
-        sb.append(", cooperativePartnerId=").append(cooperativePartnerId);
-        sb.append(", url=").append(url);
-        sb.append(", linkType=").append(linkType);
-        sb.append(", isEmploy=").append(isEmploy);
-        sb.append(", updatedTime=").append(updatedTime);
-        sb.append("]");
-        return sb.toString();
-    }
 }

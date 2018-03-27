@@ -26,6 +26,34 @@ public class ApplayUserInfo {
 
     private Date updatedTime;
 
+    @Override
+    public String toString() {
+        return "ApplayUserInfo{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", mobile='" + mobile + '\'' +
+                ", idCard='" + idCard + '\'' +
+                ", type=" + type +
+                ", status=" + status +
+                ", linkId=" + linkId +
+                ", cooperativePartnerId=" + cooperativePartnerId +
+                ", price=" + price +
+                ", isEmploy=" + isEmploy +
+                ", updatedTime=" + updatedTime +
+                ", createTime=" + createTime +
+                '}';
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getCreateTime() {
+
+        return createTime;
+    }
+
+    private Date createTime;
     public Long getId() {
         return id;
     }
@@ -114,24 +142,4 @@ public class ApplayUserInfo {
         this.updatedTime = updatedTime;
     }
 
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getClass().getSimpleName());
-        sb.append(" [");
-        sb.append("Hash = ").append(hashCode());
-        sb.append(", id=").append(id);
-        sb.append(", name=").append(name);
-        sb.append(", mobile=").append(mobile);
-        sb.append(", idCard=").append(idCard);
-        sb.append(", type=").append(type);
-        sb.append(", status=").append(status);
-        sb.append(", linkId=").append(linkId);
-        sb.append(", cooperativePartnerId=").append(cooperativePartnerId);
-        sb.append(", price=").append(price);
-        sb.append(", isEmploy=").append(isEmploy);
-        sb.append(", updatedTime=").append(updatedTime);
-        sb.append("]");
-        return sb.toString();
-    }
 }

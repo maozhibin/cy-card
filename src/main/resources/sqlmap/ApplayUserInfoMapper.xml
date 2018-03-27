@@ -13,6 +13,7 @@
     <result column="price" jdbcType="DECIMAL" property="price" />
     <result column="is_employ" jdbcType="INTEGER" property="isEmploy" />
     <result column="updated_time" jdbcType="TIMESTAMP" property="updatedTime" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
   </resultMap>
   <sql id="Base_Column_List">
     id, name, mobile, id_card, type, status, link_id, cooperative_partner_id, price, 
@@ -28,11 +29,11 @@
     insert into applay_user_info (id, name, mobile, 
       id_card, type, status, 
       link_id, cooperative_partner_id, price, 
-      is_employ, updated_time)
+      is_employ, updated_time,create_time)
     values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR}, 
       #{idCard,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, 
       #{linkId,jdbcType=BIGINT}, #{cooperativePartnerId,jdbcType=BIGINT}, #{price,jdbcType=DECIMAL}, 
-      #{isEmploy,jdbcType=INTEGER}, #{updatedTime,jdbcType=TIMESTAMP})
+      #{isEmploy,jdbcType=INTEGER}, #{updatedTime,jdbcType=TIMESTAMP},#{createTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="cun.yun.card.cycard.dal.model.ApplayUserInfo">
     insert into applay_user_info
@@ -70,6 +71,10 @@
       <if test="updatedTime != null">
         updated_time,
       </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -104,6 +109,9 @@
       </if>
       <if test="updatedTime != null">
         #{updatedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -140,6 +148,10 @@
       <if test="updatedTime != null">
         updated_time = #{updatedTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -154,7 +166,8 @@
       cooperative_partner_id = #{cooperativePartnerId,jdbcType=BIGINT},
       price = #{price,jdbcType=DECIMAL},
       is_employ = #{isEmploy,jdbcType=INTEGER},
-      updated_time = #{updatedTime,jdbcType=TIMESTAMP}
+      updated_time = #{updatedTime,jdbcType=TIMESTAMP},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

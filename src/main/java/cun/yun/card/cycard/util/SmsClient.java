@@ -1,11 +1,15 @@
 package cun.yun.card.cycard.util;
 
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.Map;
-import java.util.UUID;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
+import java.io.IOException;
+import java.util.*;
 
 /**
  * 短信工具类
@@ -14,72 +18,67 @@ import java.util.UUID;
  * @create	2017年12月13日
  */
 public class SmsClient {
-	private static final Logger LOGGER = LoggerFactory.getLogger(SmsClient.class);
+	//发送验证码的请求路径URL
+	private static final String SERVER_URL="https://api.netease.im/sms/sendcode.action";
+	//网易云信分配的账号，请替换你在管理后台应用下申请的Appkey
+	private static final String APP_KEY="b54a2087b0bc42d9e07a9c30462f103c";
+	//网易云信分配的密钥，请替换你在管理后台应用下申请的appSecret
+	private static final String APP_SECRET="97b317aa8aa9";
+	//随机数
+	private static final String NONCE="123456";
+	//短信模板ID
+	private static final String TEMPLATEID="3982533";
+	//手机号
+//	private static final String MOBILE="13093783517";
+	//验证码长度，范围4～10，默认为4
+	private static final String CODELEN="6";
 
-	/** 网易云信地址 */
-	private static final String SMS_INFORMATION_TEMPLATE_API = "https://api.netease.im/sms/sendtemplate.action";
-	private static final String SMS_AUTH_CODE_TEMPLATE_API = "https://api.netease.im/sms/sendcode.action";
-	/** 网易云信AppKey */
-	private static final String SMS_APP_KEY = "b54a2087b0bc42d9e07a9c30462f103c";
-	/** 网易云信AppSecret */
-	private static final String SMS_APP_SECRET = "97b317aa8aa9";
+	/**
+	 * 验证码短信发送
+	 * @param phone
+	 */
+	public static String sendMsg(String phone) throws IOException {
+		DefaultHttpClient httpClient = new DefaultHttpClient();
+		HttpPost httpPost = new HttpPost(SERVER_URL);
+		String curTime = String.valueOf((new Date()).getTime() / 1000L);
+		/*
+		 * 参考计算CheckSum的java代码，在上述文档的参数列表中，有CheckSum的计算文档示例
+		 */
+		String checkSum = CheckSumBuilder.getCheckSum(APP_SECRET, NONCE, curTime);
+		// 设置请求的header
+		httpPost.addHeader("AppKey", APP_KEY);
+		httpPost.addHeader("Nonce", NONCE);
+		httpPost.addHeader("CurTime", curTime);
+		httpPost.addHeader("CheckSum", checkSum);
+		httpPost.addHeader("Content-Type", "application/x-www-form-urlencoded;charset=utf-8");
 
-	private static final String NULL = "null";
+		// 设置请求的的参数，requestBody参数
+		List<NameValuePair> nvps = new ArrayList<NameValuePair>();
+		/*
+		 * 1.如果是模板短信，请注意参数mobile是有s的，详细参数配置请参考“发送模板短信文档”
+		 * 2.参数格式是jsonArray的格式，例如 "['13888888888','13666666666']"
+		 * 3.params是根据你模板里面有几个参数，那里面的参数也是jsonArray格式
+		 */
+		nvps.add(new BasicNameValuePair("templateid", TEMPLATEID));
+		nvps.add(new BasicNameValuePair("mobile", phone));
+		nvps.add(new BasicNameValuePair("codeLen", CODELEN));
+		httpPost.setEntity(new UrlEncodedFormEntity(nvps, "utf-8"));
+		// 执行请求
+		HttpResponse response = httpClient.execute(httpPost);
+		/*
+		 * 1.打印执行结果，打印结果一般会200、315、403、404、413、414、500
+		 * 2.具体的code有问题的可以参考官网的Code状态表
+		 */
+		return EntityUtils.toString(response.getEntity(), "utf-8");
+	}
+	public static void main(String[] args) {
+		try {
+			System.out.println(sendMsg("13093783517"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
-	private SmsClient() {
 	}
 
-//	/**
-//	 * 发送通知短信
-//	 */
-//	public static String sendInformationMessage(String[] phoneNum, Integer templateId, String[] params) {
-//		Map<String, Object> paramMap = Maps.newHashMap();
-//		String phoneList = new Gson().toJson(phoneNum);
-//		paramMap.put("mobiles", phoneList);
-//		paramMap.put("params", new Gson().toJson(params));
-//		return sendTemplateMessage(SMS_INFORMATION_TEMPLATE_API, phoneList, templateId, paramMap);
-//	}
-//
-//	/**
-//	 * 发送验证码短信
-//	 */
-//	public static String sendAuthCodeMessage(String phone, Integer templateId, String params) {
-//		Map<String, Object> paramMap = Maps.newHashMap();
-//		paramMap.put("mobile", phone);
-//		paramMap.put("authCode", params);
-//		return sendTemplateMessage(SMS_AUTH_CODE_TEMPLATE_API, phone, templateId, paramMap);
-//	}
-//
-//	/**
-//	 * 发送短信
-//	 */
-//	private static String sendTemplateMessage(String url, String phoneNum, Integer templateId,
-//			Map<String, Object> paramMap) {
-//		if (StringUtils.isBlank(phoneNum) || NULL.equals(phoneNum)) {
-//			LOGGER.warn("调用网易云信接口phone=null");
-//			return null;
-//		}
-//		paramMap.put("templateid", templateId);
-//		String responseBody = sendPost(url, paramMap);
-//
-//		LOGGER.info("调用网易短信接口发送结果:模板id:【{}】,手机号:【{}】.返回状态信息:【{}】", templateId, phoneNum, responseBody);
-//		return responseBody;
-//	}
-//
-//	/**
-//	 * post请求网易云信
-//	 */
-//	private static String sendPost(String url, Map<String, Object> params) {
-//		Map<String, String> headers = Maps.newHashMap();
-//		String curTime = String.valueOf(System.currentTimeMillis());
-//		String nonce = UUID.randomUUID().toString();
-//		String checkSum = CheckSumBuilder.getCheckSum(SMS_APP_SECRET, nonce, curTime);
-//		headers.put("AppKey", SMS_APP_KEY);
-//		headers.put("CurTime", curTime);
-//		headers.put("Nonce", nonce);
-//		headers.put("CheckSum", checkSum);
-//		headers.put("Content-Type", "application/x-www-form-urlencoded;charset=utf-8");
-//		return OkHttpUtils.doFormPost(url, params, Headers.of(headers));
-//	}
 
 }

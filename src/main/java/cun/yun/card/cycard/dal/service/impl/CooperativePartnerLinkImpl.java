@@ -1,7 +1,8 @@
 package cun.yun.card.cycard.dal.service.impl;
 
 import cun.yun.card.cycard.dal.dao.CooperativePartnerLinkMapper;
-import cun.yun.card.cycard.dal.dto.LinkInfoDato;
+import cun.yun.card.cycard.dal.dto.BankLinkInfoDato;
+import cun.yun.card.cycard.dal.dto.LoanLinkInfoDato;
 import cun.yun.card.cycard.dal.service.CooperativePartnerLinkService;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +15,12 @@ public class CooperativePartnerLinkImpl implements CooperativePartnerLinkService
     private CooperativePartnerLinkMapper cooperativePartnerLinkMapper;
 
     @Override
-    public List<LinkInfoDato> bankLinkList(String cooperativePartnerCode, long id, int type) {
+    public List<BankLinkInfoDato> bankLinkList(String cooperativePartnerCode, long id, int type) {
         return cooperativePartnerLinkMapper.bankLinkList(cooperativePartnerCode,id,type);
+    }
+
+    @Override
+    public List<LoanLinkInfoDato> loanLinkList(String cooperativePartnerCode, long id, int type) {
+        return cooperativePartnerLinkMapper.loanLinkList(cooperativePartnerCode,id,type);
     }
 }

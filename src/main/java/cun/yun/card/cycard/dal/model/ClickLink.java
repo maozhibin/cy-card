@@ -12,6 +12,28 @@ public class ClickLink {
     private Integer type;
 
     private Date updatedTime;
+    private Date createTime;
+
+    @Override
+    public String toString() {
+        return "ClickLink{" +
+                "id=" + id +
+                ", cooperativePartnerId=" + cooperativePartnerId +
+                ", linkId=" + linkId +
+                ", type=" + type +
+                ", updatedTime=" + updatedTime +
+                ", createTime=" + createTime +
+                '}';
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getCreateTime() {
+
+        return createTime;
+    }
 
     public Long getId() {
         return id;
@@ -53,18 +75,4 @@ public class ClickLink {
         this.updatedTime = updatedTime;
     }
 
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getClass().getSimpleName());
-        sb.append(" [");
-        sb.append("Hash = ").append(hashCode());
-        sb.append(", id=").append(id);
-        sb.append(", cooperativePartnerId=").append(cooperativePartnerId);
-        sb.append(", linkId=").append(linkId);
-        sb.append(", type=").append(type);
-        sb.append(", updatedTime=").append(updatedTime);
-        sb.append("]");
-        return sb.toString();
-    }
 }

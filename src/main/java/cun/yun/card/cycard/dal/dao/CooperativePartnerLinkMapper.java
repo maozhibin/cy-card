@@ -1,6 +1,7 @@
 package cun.yun.card.cycard.dal.dao;
 
-import cun.yun.card.cycard.dal.dto.LinkInfoDato;
+import cun.yun.card.cycard.dal.dto.BankLinkInfoDato;
+import cun.yun.card.cycard.dal.dto.LoanLinkInfoDato;
 import cun.yun.card.cycard.dal.model.CooperativePartnerLink;
 import org.apache.ibatis.annotations.Param;
 
@@ -17,5 +18,7 @@ public interface CooperativePartnerLinkMapper {
 
     int updateByPrimaryKey(CooperativePartnerLink record);
 
-    List<LinkInfoDato> bankLinkList(@Param("cooperativePartnerCode") String cooperativePartnerCode, @Param("id")long id, @Param("type")int type);
+    List<BankLinkInfoDato> bankLinkList(@Param("cooperativePartnerCode") String cooperativePartnerCode, @Param("id")long id, @Param("type")int type);
+
+    List<LoanLinkInfoDato> loanLinkList(@Param("cooperativePartnerCode") String cooperativePartnerCode, @Param("id")long id, @Param("type")int type);
 }
