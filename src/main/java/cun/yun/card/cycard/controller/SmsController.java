@@ -20,6 +20,7 @@ import java.awt.image.RenderedImage;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -60,7 +61,6 @@ public class SmsController {
             log.error("生成图片验证码错误");
             e.printStackTrace();
         }
-
         return  result.fill(JsonResponseMsg.CODE_SUCCESS,"生成图片验证码成功",resultMap);
     }
 
@@ -68,7 +68,7 @@ public class SmsController {
      * 短信验证码的下发
      */
     @RequestMapping(value = "/send" ,method = RequestMethod.GET)
-    public JsonResponseMsg send(String mobile, String imageTime, String code,HttpRequest request){
+    public JsonResponseMsg send(String mobile, String imageTime, String code){
         JsonResponseMsg result = new JsonResponseMsg();
         Map<String,Object> map = new HashMap<>();
         if(StringUtils.isEmpty(mobile)){
@@ -88,7 +88,7 @@ public class SmsController {
             return result.fill(JsonResponseMsg.CODE_FAIL,"同一手机号在一分钟之内不能多次下发验证短信");
         }
         Object codeRedisValue = redisService.get(imageTime);
-        if(!code.equals(String.valueOf(codeRedisValue))){
+        if(!(code.toUpperCase()).equals(String.valueOf(codeRedisValue).toUpperCase())){
             return result.fill(JsonResponseMsg.CODE_FAIL,"你输入的验证码错误请重新输入");
         }
         try {
@@ -102,6 +102,8 @@ public class SmsController {
                 //存储短信验证码的信息
                 map.put("mobilecode",mobile+code);
                 map.put("smsCode",obj);
+                Long time = new Date().getTime();
+                map.put("time",time);
            }else{
                return result.fill(JsonResponseMsg.CODE_FAIL,"短信接口错误");
            }

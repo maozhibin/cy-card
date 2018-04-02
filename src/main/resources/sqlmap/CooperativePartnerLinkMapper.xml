@@ -138,6 +138,7 @@
       AND l.id = #{id}
       AND pa.`code` = #{cooperativePartnerCode}
       AND pa.is_employ = 0
+      AND l.product_type=1
       ORDER BY b.sort
   </select>
 
@@ -182,6 +183,51 @@
         AND l.id = #{id}
         AND pa.`code` =  #{cooperativePartnerCode}
         AND pa.is_employ = 0
+        AND l.product_type=2
         ORDER BY lo.sort
+    </select>
+
+
+    <select id="bondLinkList" resultType="cun.yun.card.cycard.dal.dto.BondLinkInfoDato">
+        SELECT
+            pa.id cooperativePartnerId,
+            k.id linkId,
+            b.`name`,
+            b.iamge,
+            b.price,
+            p.type,
+            b.introduce,
+            b.sort,
+            k.url,
+            (
+                SELECT
+                    COUNT(1)
+                FROM
+                    applay_user_info
+                WHERE
+                    cooperative_partner_id = l.cooperative_partner_id
+                AND link_id = k.id
+                AND is_employ = 0
+                AND type = 3
+            ) count
+        FROM
+            cooperative_partner_link l
+        LEFT JOIN cooperative_link_product p ON p.cooperative_partner_link_id = l.id
+        AND l.is_employ = 0
+        LEFT JOIN bond_link k ON k.id = p.link_id
+        AND p.is_employ = 0
+        LEFT JOIN bond b ON k.bank_id = b.id
+        AND k.is_employ = 0
+        LEFT JOIN cooperative_partner pa ON pa.id = l.cooperative_partner_id
+        AND b.is_employ = 0
+        WHERE
+            p.type = 3
+        AND l.link_type = #{type}
+        AND l.id = #{id}
+        AND pa.`code` = #{cooperativePartnerCode}
+        AND pa.is_employ = 0
+        AND l.product_type=3
+        ORDER BY
+            b.sort
     </select>
 </mapper>

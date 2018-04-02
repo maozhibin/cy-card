@@ -36,7 +36,7 @@ public class ApplayUserInfoController {
      * 用户信息保存
      */
     @RequestMapping(value = "/userSave" ,method = RequestMethod.GET)
-    public JsonResponseMsg userSave(String name,String mobile,String type,String linkId,String cooperativePartnerId,String price,String smsCode,String mobilecode){
+    public JsonResponseMsg userSave(String name,String mobile,String type,String linkId,String cooperativePartnerId,String price){
         JsonResponseMsg result = new JsonResponseMsg();
         if(StringUtils.isEmpty(name)){
             return result.fill(JsonResponseMsg.CODE_FAIL,"请输入用户名");
@@ -53,17 +53,17 @@ public class ApplayUserInfoController {
         if(!NumberUtils.isNumber(cooperativePartnerId)){
             return result.fill(JsonResponseMsg.CODE_FAIL,"请输入cooperativePartnerId");
         }
-        if(StringUtils.isEmpty(smsCode)){
-            return result.fill(JsonResponseMsg.CODE_FAIL,"请输入验证码");
-        }
+//        if(StringUtils.isEmpty(smsCode)){
+//            return result.fill(JsonResponseMsg.CODE_FAIL,"请输入验证码");
+//        }
         if(StringUtils.isEmpty(price)){
             return result.fill(JsonResponseMsg.CODE_FAIL,"请输入价格");
         }
 
-        Object smsCodeRedis = redisService.get(mobilecode);
-        if(!smsCode.equals(String.valueOf(smsCodeRedis))){
-            return result.fill(JsonResponseMsg.CODE_FAIL,"你输入的验证码信息不正确");
-        }
+//        Object smsCodeRedis = redisService.get(mobilecode);
+//        if(!smsCode.equals(String.valueOf(smsCodeRedis))){
+//            return result.fill(JsonResponseMsg.CODE_FAIL,"你输入的验证码信息不正确");
+//        }
         ApplayUserInfo applayUserInfo = new ApplayUserInfo();
         applayUserInfo.setName(name);
         applayUserInfo.setMobile(mobile);

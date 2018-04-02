@@ -33,4 +33,9 @@ public class RedisServiceImpl implements RedisService {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public void remove(String key) {
+        redisTemplate.delete(key);
+    }
 }
